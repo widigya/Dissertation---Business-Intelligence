@@ -11,6 +11,8 @@ This code can be easily copied to the webpage generator to build the interface. 
 3) Result documents
 In order to try the system’s functionality, two input files are included: TechNation_Part1.csv and TechNation_Part2.csv. Please make sure any input files are following the same organisation style as the aforementioned documents. The keywords file are: keywords_urls.csv and keywords_tags.csv. Both of them can be modified according to user’s requirements. Lastly, the result file example from said inputs is called master_data_transform_final.csv.
 
+Input documents are confidential, for further information please contact me.
+
 Copyright:
 Alam Widigya
 alam.widigya@kcl.ac.uk

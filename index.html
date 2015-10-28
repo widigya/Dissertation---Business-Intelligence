@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+<meta http-equiv="keywords" content="web hosting, hosting, online services, domain names, domains" />
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+<meta http-equiv="description" content="web hosting, hosting, online services, domain names, domains" />
+<link href="/notes/css/style.css" rel="stylesheet" type="text/css" />
+
+<title>UK Business Intelligence System for SME</title>
+
+<meta charset="utf-8">
+
+<style>
+
+html, body, #map-canvas {
+height: 93.4%;
+margin: 0px;
+padding: 0px
+}
+#panel {
+position: static;
+left: 130px;
+z-index: 5;
+background-color: #fff;
+padding: 5px;
+border: 1px solid #999;
+}
+
+table {
+width:100%;
+}
+table#t01 tr:nth-child(even) {
+background-color: #eee;
+}
+table#t01 tr:nth-child(odd) {
+background-color:#fff;
+}
+table#t01 th	{
+background-color: black;
+color: white;
+}
+table#t02 tr:nth-child(even) {
+background-color: #eee;
+}
+table#t02 tr:nth-child(odd) {
+background-color:#fff;
+}
+table#t02 th	{
+background-color: black;
+color: white;
+}
+
+#fixedbutton {
+    position: fixed;
+    bottom: 0px;
+    left: 0px; 
+}
+
+#fixedbutton2 {
+    position: fixed;
+    bottom: 0px;
+    left: 50px; 
+}
+
+#fixedbutton3 {
+    position: fixed;
+    bottom: 0px;
+    left: 131px; 
+}
+</style>  
+</head>
+
+<body>
+
+<p><b><font size="5">Business Intelligence System for UK SME</font></b></p>
+
+<table style="width:1000px;border:0px solid #000;"><tr><th align="left">
+<font size="2" color="black" style="font-weight:normal;">
+This Business Intelligence (BI) system is a prototype functioned as a showcase of Google Maps API's
+capabilities to visualise real location-based data of companies in the UK. The system can provide
+different insights based on queries generated using below forms through interactive heat map and
+tables, showing associated query results. It is still under development for further enhancements
+to improve its performance in supporting more analytical decision-making processes.<br></font>
+<font size="2" color="blue" style="font-weight:normal;">
+contact: alam.widigya@kcl.ac.uk<br><br></font>
+</th></tr></table>
+
+<table style="width:1000px;border:0px solid #000;"><tr><th align="left">
+<font size="2" color="red" style="font-weight:normal;">Version beta_3.0 notes:</font></th></tr>
+<tr><td><font size="2" color="red" style="font-weight:normal;">&nbsp;- Postcode follows 
+UK format (BSX XXX / BSXX XXX)</font></td></tr>
+<tr><td><font size="2" color="red" style="font-weight:normal;">&nbsp;- Company number is based on the number registered in the Companies House UK
+(max 7-digit)</font></td></tr>
+<tr><td><font size="2" color="red" style="font-weight:normal;">&nbsp;- Added features: 
+Company Size and Type of Business</font></td></tr>
+<tr><td><font size="2" color="red" style="font-weight:normal;">&nbsp;- Query result augmented
+with selected type of business and city</font></td></tr>
+<tr><td><font size="2" color="red" style="font-weight:normal;">&nbsp;- SME definition (source:
+<a href=https://www.ucl.ac.uk/procurement/suppliers/sme 
+target="_blank">https://www.ucl.ac.uk/procurement/suppliers/sme</a>):</font></td></tr></table>
+
+<table id="t02" frame="box" style="width:550px;border:1px solid #000;border-collapse:collapse;text-align: center;">
+  <tr>
+    <th><font size="2" color="white">Category</font></th>
+    <th><font size="2" color="white">Headcount</font></th>		
+    <th><font size="2" color="white">Turnover (in Millions GBP)</font></th>
+    <th><font size="2" color="white">Balance Sheet (in Millions GBP)</font></th>
+  </tr>
+  <tr>
+    <td><font size="2" color="black">Large</font></td>
+    <td><font size="2" color="black">greater than or equal to 250</font></td>
+    <td><font size="2" color="black">greater than 41</font></td>		
+    <td><font size="2" color="black">greater than 5.2</font></td>
+  </tr>
+  <tr>
+    <td><font size="2" color="black">Medium</font></td>
+    <td><font size="2" color="black">less than 250</font></td>
+    <td><font size="2" color="black">less than 41</font></td>		
+    <td><font size="2" color="black">less than 35.2</font></td>
+  </tr>
+  <tr>
+    <td><font size="2" color="black">Small</font></td>
+    <td><font size="2" color="black">less than 50</font></td>
+    <td><font size="2" color="black">less than 8.2</font></td>		
+    <td><font size="2" color="black">less than 8.2</font></td>
+  </tr>
+  <tr>
+    <td><font size="2" color="black">Micro</font></td>
+    <td><font size="2" color="black">less than 10</font></td>
+    <td><font size="2" color="black">less than 1.7</font></td>		
+    <td><font size="2" color="black">less than 1.7</font></td>
+  </tr>
+</table>
+<br><br>Submit your query:<br>
+
+<form method="POST"> 
+<table style="width:700px">
+<tr><td><font size="2">Company Name</font></td><td><input type="text" name="company"></td></tr>
+<tr><td><font size="2">Company ID</font></td><td><input type="text" name="number"></td></tr>
+
+<tr><td><font size="2">City/Town/Village</font></td>
+<td>
+<select name="city">
+        <option></option>
+        <option value="Aberdeen">Aberdeen</option>
+        <option value="Abingdon">Abingdon</option>
+        <option value="Altricham">Altricham</option>
+        <option value="Bath">Bath</option>
+        <option value="Belfast">Belfast</option>
+        <option value="Birchwood">Birchwood</option>
+        <option value="Birmingham">Birmingham</option>
+        <option value="Bristol">Bristol</option>
+        <option value="Bury">Bury</option>
+        <option value="Bushmills">Bushmills</option>
+        <option value="Camberley">Camberley</option>
+        <option value="Cambridge">Cambridge</option>
+        <option value="Cleckheaton">Cleckheaton</option>
+        <option value="Dartford">Dartford</option>
+        <option value="Edinburgh">Edinburgh</option>
+        <option value="Fareham">Fareham</option>
+        <option value="Farnborough">Farnborough</option>
+        <option value="Greenford">Greenford</option>
+        <option value="Hatfield">Hatfield</option>
+        <option value="Huddersfield">Huddersfield</option>
+        <option value="Hounslow">Hounslow</option>
+        <option value="Hungerford">Hungerford</option>
+        <option value="Ipswich">Ipswich</option>
+        <option value="Leamington Spa">Leamington Spa</option>
+        <option value="Leeds">Leeds</option>
+        <option value="London">London</option>
+        <option value="Leicester">Leicester</option>
+        <option value="Luton">Luton</option>
+        <option value="Leyland">Leyland</option>
+        <option value="Lianelli">Lianelli</option>
+        <option value="Malvern">Malvern</option>
+        <option value="Manchester">Manchester</option>
+        <option value="Mansfield">Mansfield</option>
+        <option value="Milton Keynes">Milton Keynes</option>
+        <option value="Newcastle Upon Tyne">Newcastle Upon Tyne</option>
+        <option value="Northwich">Northwich</option>
+        <option value="Nr Lewes">Nr Lewes</option>
+        <option value="Oxford">Oxford</option>
+        <option value="Reading">Reading</option>
+        <option value="Ruislip">Ruislip</option>
+        <option value="Sheffield">Sheffield</option>
+        <option value="Slough">Slough</option>
+        <option value="Southampton">Southampton</option>
+        <option value="Staines-Upon-Thames">Staines Upon Thames</option>
+        <option value="Stockport">Stockport</option>
+        <option value="Stone">Stone</option>
+        <option value="New Malden">New Malden</option>
+        <option value="Trowbridge">Trowbridge</option>
+        <option value="Uckfield">Uckfield</option>
+        <option value="Wakefield">Wakefield</option>
+        <option value="Wallsend">Wallsend</option>
+        <option value="Walsall">Walsall</option>
+        <option value="Warwick">Warwick</option>
+        <option value="Warrington">Warrington</option>
+        <option value="Westoning">Westoning</option>
+        <option value="Weston Super Mare">Weston Super Mare</option>
+        <option value="Wheatley">Wheatley</option>
+        <option value="Weybridge">Weybridge</option>
+        <option value="Winchester">Winchester</option>
+        <option value="Wrexham">Wrexham</option>
+</select></td></tr>
+
+<tr><td><font size="2">Company Size</font></td>
+<td>
+<select name="size">
+        <option></option>
+        <option value="Large">Large</option>
+        <option value="Medium">Medium</option>
+        <option value="Small">Small</option>
+        <option value="Micro">Micro</option>
+</select></td></tr>
+
+<tr><td><font size="2">Type of Business</font></td>
+<td>
+<select name="biz">
+        <option></option>
+        <option value="iot">Internet of Things</option>
+        <option value="wearable">Wearables</option>
+        <option value="m2m">Machine-to-Machine</option>
+        <option value="diy">Do-It-Yourself</option>
+        <option value="healthcare">Healthcare</option>
+        <option value="wellness">Wellness</option>
+        <option value="digital marketing">Digital Marketing</option>
+        <option value="business intelligence">Business Intelligence</option>
+        <option value="sso">Single Sign-On</option>
+        <option value="big data">Big Data</option>
+        <option value="data processing">Data Processing</option>
+        <option value="analytics">Analytics</option>
+        <option value="crm">Customer Relationship Management</option>
+        <option value="cloud">Cloud</option>
+        <option value="privacy">Privacy</option>
+        <option value="erp">Enterprise Resource Planning</option>
+        <option value="social">Social</option>
+        <option value="security">Security</option>
+        <option value="protection">Protection</option>
+</select></td></tr>
+
+<tr><td><font size="2">Postcode</font></td><td><input type="text" name="postcode"></td></tr>
+
+<tr><td><font size="2">Status</font></td>
+<td>
+<input type="checkbox" name="status1" value="Active"><font size="2">&nbsp;Active</font>
+</td></tr>
+
+<tr><td><font size="2"> </font></td>
+<td>
+<input type="checkbox" name="status2" value="Proposal to Strike Off"><font size="2">&nbsp;Proposal to Strike Off</font>
+</td></tr>
+
+<tr><td><font size="2"> </font></td>
+<td>
+<input type="checkbox" name="status3" value="Liquidation"><font size="2">&nbsp;Liquidation</font>
+</td></tr>
+
+<tr><td><font size="2"> </font></td>
+<td>
+<input type="checkbox" name="status4" value="Dissolved"><font size="2">&nbsp;Dissolved</font>
+</td></tr>
+
+<tr><td><input type="submit" name="search" value="Search"></td></tr>
+
+</table>
+</form><br>
+
+<?php
+
+// define variables and set to empty values
+$company = $city = $postcode = $number = "";
+$status1 = $status2 = $status3 = $status4 = "";
+$latitude = $longitude = $web = $biz = "";
+
+function blank(){
+}
+
+$servername = "fdb7.awardspace.net";
+$username = "1896436_digitalc";
+$password = "digitalCat4pult";
+$dbname = "1896436_digitalc";
+
+$company2 = array();
+$number2 = array();
+$city2 = array();
+$postcode2 = array();
+$status2 = array();
+$address12 = array();
+$address22 = array();
+$address32 = array();
+$address42 = array();
+$latitude1 = array();
+$longitude1 = array();
+$web1 = array();
+$biz2 = array();
+$b0a = array();
+$b1a = array();
+$b2a = array();
+$b3a = array();
+$b4a = array();
+$b5a = array();
+$b6a = array();
+$b7a = array();
+$b8a = array();
+$b9a = array();
+$b10a = array();
+
+// Create connection
+$conn = mysql_connect($servername, $username, $password) or die(mysql_error());
+
+mysql_select_db($dbname) or die(mysql_error());
+
+$query1 = $_POST['company']; 
+$query2 = $_POST['city'];
+$query3 = $_POST['postcode'];
+$query41 = $_POST['status1'];
+$query42 = $_POST['status2'];
+$query43 = $_POST['status3'];
+$query44 = $_POST['status4'];
+$query5 = $_POST['number'];
+$query6 = $_POST['size'];
+$query7 = $_POST['biz'];
+
+if ($query7 === 'iot') {
+        $q7 = 'Internet of Things';
+} elseif ($query7 === 'wearable') {
+        $q7 = 'Wearables';
+} elseif ($query7 === 'm2m') {
+        $q7 = 'Machine-to-Machine';
+} elseif ($query7 === 'diy') {
+        $q7 = 'Do-It-Yourself';
+} elseif ($query7 === 'healthcare') {
+        $q7 = 'Healthcare';
+} elseif ($query7 === 'wellness') {
+        $q7 = 'Wellness';
+} elseif ($query7 === 'digital marketing') {
+        $q7 = 'Digital Marketing';
+} elseif ($query7 === 'business intelligence') {
+        $q7 = 'Business Intelligence';
+} elseif ($query7 === 'sso') {
+        $q7 = 'Single Sign-On';
+} elseif ($query7 === 'big data') {
+        $q7 = 'Big Data';
+} elseif ($query7 === 'data processing') {
+        $q7 = 'Data Processing';
+} elseif ($query7 === 'analytics') {
+        $q7 = 'Analytics';
+} elseif ($query7 === 'crm') {
+        $q7 = 'Customer Relationship Management';
+} elseif ($query7 === 'cloud') {
+        $q7 = 'Cloud';
+} elseif ($query7 === 'privacy') {
+        $q7 = 'Privacy';
+} elseif ($query7 === 'erp') {
+        $q7 = 'Enterprise Resource Planning';
+} elseif ($query7 === 'social') {
+        $q7 = 'Social';
+} elseif ($query7 === 'security') {
+        $q7 = 'Security';
+} elseif ($query7 === 'protection') {
+        $q7 = 'Protection';
+} else {
+        $q7 = 'Multiple';
+}
+
+$query1 = htmlspecialchars($query1); 
+$query2 = htmlspecialchars($query2);
+$query3 = htmlspecialchars($query3); 
+$query41 = htmlspecialchars($query41);
+$query42 = htmlspecialchars($query42);
+$query43 = htmlspecialchars($query43);
+$query44 = htmlspecialchars($query44);
+$query5 = htmlspecialchars($query5); 
+$query6 = htmlspecialchars($query6);
+$query7 = htmlspecialchars($query7);
+// changes characters used in html to their equivalents, for example: < to &gt;
+         
+$query1 = mysql_real_escape_string($query1);
+$query2 = mysql_real_escape_string($query2);
+$query3 = mysql_real_escape_string($query3);
+$query41 = mysql_real_escape_string($query41);
+$query42 = mysql_real_escape_string($query42);
+$query43 = mysql_real_escape_string($query43);
+$query44 = mysql_real_escape_string($query44);
+$query5 = mysql_real_escape_string($query5);
+$query6 = mysql_real_escape_string($query6);
+$query7 = mysql_real_escape_string($query7);
+// makes sure nobody uses SQL injection
+
+//check initial condition
+if ((empty($query1)) && (empty($query3)) && (empty($query6))
+&& (empty($query41)) && (empty($query42)) && (empty($query43)) 
+&& (empty($query44)) && (empty($query5)) && (empty($query2))
+&& (empty($query7))) {
+        blank;
+} else {
+        
+        //1 = active, 2 = proposal to strike off, 3 = liquidation, 4 = others
+        
+        //all four - 1234
+        if (($query41 === "Active") && ($query42 === "Proposal to Strike Off")
+        && ($query43 === "Liquidation") && ($query44 === "Dissolved")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%')
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND ((`BusinessType0` LIKE '%".$query7."%') 
+                OR (`BusinessType1` LIKE '%".$query7."%') OR (`BusinessType2` LIKE '%".$query7."%')
+                OR (`BusinessType3` LIKE '%".$query7."%') OR (`BusinessType4` LIKE '%".$query7."%')
+                OR (`BusinessType5` LIKE '%".$query7."%') OR (`BusinessType6` LIKE '%".$query7."%')
+                OR (`BusinessType7` LIKE '%".$query7."%') OR (`BusinessType8` LIKE '%".$query7."%')
+                OR (`BusinessType9` LIKE '%".$query7."%') OR (`BusinessType10` LIKE '%".$query7."%'))
+                AND (`Postcode` LIKE '%".$query3."%')") or die(mysql_error());
+        }
+        
+        //all three - 123
+        elseif (($query41 === "Active") && ($query42 === "Proposal to Strike Off")
+        && ($query43 === "Liquidation")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%')
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND (`Postcode` LIKE '%".$query3."%')
+                AND ((`BusinessType0` LIKE '%".$query7."%') 
+                OR (`BusinessType1` LIKE '%".$query7."%') OR (`BusinessType2` LIKE '%".$query7."%')
+                OR (`BusinessType3` LIKE '%".$query7."%') OR (`BusinessType4` LIKE '%".$query7."%')
+                OR (`BusinessType5` LIKE '%".$query7."%') OR (`BusinessType6` LIKE '%".$query7."%')
+                OR (`BusinessType7` LIKE '%".$query7."%') OR (`BusinessType8` LIKE '%".$query7."%')
+                OR (`BusinessType9` LIKE '%".$query7."%') OR (`BusinessType10` LIKE '%".$query7."%'))
+                AND ((`Status` LIKE 'Active') OR (`Status` LIKE 'Proposal to Strike Off')
+                OR (`Status` LIKE 'Liquidation'))") or die(mysql_error());
+        }
+        
+        //124
+        elseif (($query41 === "Active") && ($query42 === "Proposal to Strike Off")
+        && ($query44 === "Dissolved")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%')
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND (`Postcode` LIKE '%".$query3."%')
+                AND ((`Business Type0` LIKE '%".$query7."%') 
+                OR (`Business Type1` LIKE '%".$query7."%') OR (`Business Type2` LIKE '%".$query7."%')
+                OR (`Business Type3` LIKE '%".$query7."%') OR (`Business Type4` LIKE '%".$query7."%')
+                OR (`Business Type5` LIKE '%".$query7."%') OR (`Business Type6` LIKE '%".$query7."%')
+                OR (`Business Type7` LIKE '%".$query7."%') OR (`Business Type8` LIKE '%".$query7."%')
+                OR (`Business Type9` LIKE '%".$query7."%') OR (`Business Type10` LIKE '%".$query7."%'))
+                AND ((`Status` LIKE 'Active') OR (`Status` LIKE 'Proposal to Strike Off')
+                OR (`Status` LIKE 'Dissolved'))") or die(mysql_error());
+        }
+        
+        //134
+        elseif (($query41 === "Active") && ($query43 === "Liquidation")
+        && ($query44 === "Dissolved")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%')
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND (`Postcode` LIKE '%".$query3."%')
+                AND ((`Business Type0` LIKE '%".$query7."%') 
+                OR (`Business Type1` LIKE '%".$query7."%') OR (`Business Type2` LIKE '%".$query7."%')
+                OR (`Business Type3` LIKE '%".$query7."%') OR (`Business Type4` LIKE '%".$query7."%')
+                OR (`Business Type5` LIKE '%".$query7."%') OR (`Business Type6` LIKE '%".$query7."%')
+                OR (`Business Type7` LIKE '%".$query7."%') OR (`Business Type8` LIKE '%".$query7."%')
+                OR (`Business Type9` LIKE '%".$query7."%') OR (`Business Type10` LIKE '%".$query7."%'))
+                AND ((`Status` LIKE 'Active') OR (`Status` LIKE 'Dissolved')
+                OR (`Status` LIKE 'Liquidation'))") or die(mysql_error());
+        }
+        
+        //234
+        elseif (($query42 === "Proposal to Strike Off") && ($query43 === "Liquidation")
+        && ($query44 === "Dissolved")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%')
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND (`Postcode` LIKE '%".$query3."%')
+                AND ((`Business Type0` LIKE '%".$query7."%') 
+                OR (`Business Type1` LIKE '%".$query7."%') OR (`Business Type2` LIKE '%".$query7."%')
+                OR (`Business Type3` LIKE '%".$query7."%') OR (`Business Type4` LIKE '%".$query7."%')
+                OR (`Business Type5` LIKE '%".$query7."%') OR (`Business Type6` LIKE '%".$query7."%')
+                OR (`Business Type7` LIKE '%".$query7."%') OR (`Business Type8` LIKE '%".$query7."%')
+                OR (`Business Type9` LIKE '%".$query7."%') OR (`Business Type10` LIKE '%".$query7."%'))
+                AND ((`Status` LIKE 'Liquidation') OR (`Status` LIKE 'Proposal to Strike Off')
+                OR (`Status` LIKE 'Dissolved'))") or die(mysql_error());
+        }
+        
+        //12 or 13 or 14
+        elseif (($query41 === "Active") && ($query42 === "Proposal to Strike Off")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%')
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND (`Postcode` LIKE '%".$query3."%')
+                AND ((`Business Type0` LIKE '%".$query7."%') 
+                OR (`Business Type1` LIKE '%".$query7."%') OR (`Business Type2` LIKE '%".$query7."%')
+                OR (`Business Type3` LIKE '%".$query7."%') OR (`Business Type4` LIKE '%".$query7."%')
+                OR (`Business Type5` LIKE '%".$query7."%') OR (`Business Type6` LIKE '%".$query7."%')
+                OR (`Business Type7` LIKE '%".$query7."%') OR (`Business Type8` LIKE '%".$query7."%')
+                OR (`Business Type9` LIKE '%".$query7."%') OR (`Business Type10` LIKE '%".$query7."%'))
+                AND ((`Status` LIKE '$query41') OR (`Status` LIKE '$query42'))") 
+                or die(mysql_error());
+        }
+        elseif (($query41 === "Active") && ($query43 === "Liquidation")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%')
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND (`Postcode` LIKE '%".$query3."%')
+                AND ((`Business Type0` LIKE '%".$query7."%') 
+                OR (`Business Type1` LIKE '%".$query7."%') OR (`Business Type2` LIKE '%".$query7."%')
+                OR (`Business Type3` LIKE '%".$query7."%') OR (`Business Type4` LIKE '%".$query7."%')
+                OR (`Business Type5` LIKE '%".$query7."%') OR (`Business Type6` LIKE '%".$query7."%')
+                OR (`Business Type7` LIKE '%".$query7."%') OR (`Business Type8` LIKE '%".$query7."%')
+                OR (`Business Type9` LIKE '%".$query7."%') OR (`Business Type10` LIKE '%".$query7."%'))
+                AND ((`Status` LIKE '$query41') OR (`Status` LIKE '$query43'))") 
+                or die(mysql_error());
+        }
+        elseif (($query41 === "Active") && ($query44 === "Dissolved")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%')
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND (`Postcode` LIKE '%".$query3."%')
+                AND ((`Business Type0` LIKE '%".$query7."%') 
+                OR (`Business Type1` LIKE '%".$query7."%') OR (`Business Type2` LIKE '%".$query7."%')
+                OR (`Business Type3` LIKE '%".$query7."%') OR (`Business Type4` LIKE '%".$query7."%')
+                OR (`Business Type5` LIKE '%".$query7."%') OR (`Business Type6` LIKE '%".$query7."%')
+                OR (`Business Type7` LIKE '%".$query7."%') OR (`Business Type8` LIKE '%".$query7."%')
+                OR (`Business Type9` LIKE '%".$query7."%') OR (`Business Type10` LIKE '%".$query7."%'))
+                AND ((`Status` LIKE '$query41') OR (`Status` LIKE '$query44'))") 
+                or die(mysql_error());
+        }
+        
+        //23 or 24 or 34
+        elseif (($query43 === "Liquidation") && ($query44 === "Dissolved")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%')
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND (`Postcode` LIKE '%".$query3."%')
+                AND ((`Business Type0` LIKE '%".$query7."%') 
+                OR (`Business Type1` LIKE '%".$query7."%') OR (`Business Type2` LIKE '%".$query7."%')
+                OR (`Business Type3` LIKE '%".$query7."%') OR (`Business Type4` LIKE '%".$query7."%')
+                OR (`Business Type5` LIKE '%".$query7."%') OR (`Business Type6` LIKE '%".$query7."%')
+                OR (`Business Type7` LIKE '%".$query7."%') OR (`Business Type8` LIKE '%".$query7."%')
+                OR (`Business Type9` LIKE '%".$query7."%') OR (`Business Type10` LIKE '%".$query7."%'))
+                AND ((`Status` LIKE '$query43') OR (`Status` LIKE '$query44'))") 
+                or die(mysql_error());
+        }
+        elseif (($query43 === "Liquidation") && ($query42 === "Proposal to Strike Off")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%')
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND (`Postcode` LIKE '%".$query3."%')
+                AND ((`Business Type0` LIKE '%".$query7."%') 
+                OR (`Business Type1` LIKE '%".$query7."%') OR (`Business Type2` LIKE '%".$query7."%')
+                OR (`Business Type3` LIKE '%".$query7."%') OR (`Business Type4` LIKE '%".$query7."%')
+                OR (`Business Type5` LIKE '%".$query7."%') OR (`Business Type6` LIKE '%".$query7."%')
+                OR (`Business Type7` LIKE '%".$query7."%') OR (`Business Type8` LIKE '%".$query7."%')
+                OR (`Business Type9` LIKE '%".$query7."%') OR (`Business Type10` LIKE '%".$query7."%'))
+                AND ((`Status` LIKE '$query43') OR (`Status` LIKE '$query42'))") 
+                or die(mysql_error());
+        }
+        elseif (($query42 === "Proposal to Strike Off") && ($query44 === "Dissolved")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%')
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND (`Postcode` LIKE '%".$query3."%')
+                AND ((`Business Type0` LIKE '%".$query7."%') 
+                OR (`Business Type1` LIKE '%".$query7."%') OR (`Business Type2` LIKE '%".$query7."%')
+                OR (`Business Type3` LIKE '%".$query7."%') OR (`Business Type4` LIKE '%".$query7."%')
+                OR (`Business Type5` LIKE '%".$query7."%') OR (`Business Type6` LIKE '%".$query7."%')
+                OR (`Business Type7` LIKE '%".$query7."%') OR (`Business Type8` LIKE '%".$query7."%')
+                OR (`Business Type9` LIKE '%".$query7."%') OR (`Business Type10` LIKE '%".$query7."%'))
+                AND ((`Status` LIKE '$query44') OR (`Status` LIKE '$query42'))") 
+                or die(mysql_error());
+        }
+        
+        //1 or 2 or 3 or 4
+        elseif (($query41 === "Active") || ($query42 === "Proposal to Strike Off")
+        || ($query43 === "Liquidation") || ($query44 === "Dissolved")) {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%') 
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%')
+                AND ((`Business Type0` LIKE '%".$query7."%') 
+                OR (`Business Type1` LIKE '%".$query7."%') OR (`Business Type2` LIKE '%".$query7."%')
+                OR (`Business Type3` LIKE '%".$query7."%') OR (`Business Type4` LIKE '%".$query7."%')
+                OR (`Business Type5` LIKE '%".$query7."%') OR (`Business Type6` LIKE '%".$query7."%')
+                OR (`Business Type7` LIKE '%".$query7."%') OR (`Business Type8` LIKE '%".$query7."%')
+                OR (`Business Type9` LIKE '%".$query7."%') OR (`Business Type10` LIKE '%".$query7."%'))
+                AND (`Postcode` LIKE '%".$query3."%') AND ((`Status` LIKE '$query41')
+                OR (`Status` LIKE '$query42') OR (`Status` LIKE '$query43')
+                OR (`Status` LIKE '$query44'))") 
+                or die(mysql_error());
+        }
+                
+        //if status is empty
+        else {
+                $raw_results = mysql_query("SELECT * FROM `CompanyData` 
+                WHERE (`Company Name` LIKE '%".$query1."%') AND (`City` LIKE '%".$query2."%') 
+                AND (`Company ID` LIKE '%".$query5."%') 
+                AND (`Size` LIKE '%".$query6."%') 
+                AND ((`Business Type0` LIKE '%".$query7."%') 
+                OR (`Business Type1` LIKE '%".$query7."%') OR (`Business Type2` LIKE '%".$query7."%')
+                OR (`Business Type3` LIKE '%".$query7."%') OR (`Business Type4` LIKE '%".$query7."%')
+                OR (`Business Type5` LIKE '%".$query7."%') OR (`Business Type6` LIKE '%".$query7."%')
+                OR (`Business Type7` LIKE '%".$query7."%') OR (`Business Type8` LIKE '%".$query7."%')
+                OR (`Business Type9` LIKE '%".$query7."%') OR (`Business Type10` LIKE '%".$query7."%'))
+                AND (`Postcode` LIKE '%".$query3."%')") or die(mysql_error());
+        }
+        
+        if(mysql_num_rows($raw_results) > 0){ // if one or more rows are returned do following
+        echo "Query result:<br><br>";
+?>
+
+                <table id="t01" frame="box" style="width:1500px;border:1px solid #000;">
+                <tr><th><font size="2">Company Name</font></th><th><font size="2">City</font></th>
+                <th><font size="2">Postcode</font></th><th><font size="2">Status</font></th>
+                <th><font size="2">Address1</font></th><th><font size="2">Address2</font></th>
+                <th><font size="2">Address3</font></th><th><font size="2">Address4</font></th>
+                <th><font size="2">Web Address</font></th><th><font size="2">Type of Business</font></th></tr>
+<?php
+                while($results = mysql_fetch_array($raw_results)){
+                
+                        if(($results['Latitude'] == 0) && ($results['Longitude'] == 0)) {
+                                blank();
+                        } else {
+                                $company1 = $results['Company Name'];
+                                $number1 = $results['Company ID'];
+                                $city1 = $results['City'];
+                                $postcode1 = $results['Postcode'];
+                                $status1 = $results['Status'];
+                                
+                                if ($results['Address4']) {
+                                        $address11 = $results['Address1'];
+                                        $address21 = $results['Address2'];
+                                        $address31 = $results['Address3'];
+                                        $address41 = $results['Address4'];
+                                }
+                                elseif ($results['Address3']) {
+                                        $address11 = $results['Address1'];
+                                        $address21 = $results['Address2'];
+                                        $address31 = $results['Address3'];
+                                        $address41 = '-';
+                                }
+                                elseif ($results['Address2']) {
+                                        $address11 = $results['Address1'];
+                                        $address21 = $results['Address2'];
+                                        $address31 = '-';
+                                        $address41 = '-';
+                                }
+                                else {
+                                        $address11 = $results['Address1'];
+                                        $address21 = '-';
+                                        $address31 = '-';
+                                        $address41 = '-';
+                                }
+                                
+                                
+                                $latitude = $results['Latitude'];
+                                $longitude = $results['Longitude'];
+                                $web = $results['Web Address'];
+                                
+                                $b0 = $results['Business Type0'];
+                                if ($b0 === 'iot') {
+                                        $b0 = 'Internet of Things';
+                                } elseif ($b0 === 'wearable') {
+                                        $b0 = 'Wearables';
+                                } elseif ($b0 === 'm2m') {
+                                        $b0 = 'Machine-to-Machine';
+                                } elseif ($b0 === 'diy') {
+                                        $b0 = 'Do-It-Yourself';
+                                } elseif ($b0 === 'healthcare') {
+                                        $b0 = 'Healthcare';
+                                } elseif ($b0 === 'wellness') {
+                                        $b0 = 'Wellness';
+                                } elseif ($b0 === 'digital marketing') {
+                                        $b0 = 'Digital Marketing';
+                                } elseif ($b0 === 'business intelligence') {
+                                        $b0 = 'Business Intelligence';
+                                } elseif ($b0 === 'sso') {
+                                        $b0 = 'Single Sign-On';
+                                } elseif ($b0 === 'big data') {
+                                        $b0 = 'Big Data';
+                                } elseif ($b0 === 'data processing') {
+                                        $b0 = 'Data Processing';
+                                } elseif ($b0 === 'analytics') {
+                                        $b0 = 'Analytics';
+                                } elseif ($b0 === 'crm') {
+                                        $b0 = 'Customer Relationship Management';
+                                } elseif ($b0 === 'cloud') {
+                                        $b0 = 'Cloud';
+                                } elseif ($b0 === 'privacy') {
+                                        $b0 = 'Privacy';
+                                } elseif ($b0 === 'erp') {
+                                        $b0 = 'Enterprise Resource Planning';
+                                } elseif ($b0 === 'social') {
+                                        $b0 = 'Social';
+                                } elseif ($b0 === 'security') {
+                                        $b0 = 'Security';
+                                } elseif ($b0 === 'protection') {
+                                        $b0 = 'Protection';
+                                } elseif ($b0 === NULL) {
+                                        $b0 = 'N/A';
+                                }
+                                
+                                $b1 = $results['Business Type1'];
+                                if ($b1 === 'iot') {
+                                        $b1 = 'Internet of Things';
+                                } elseif ($b1 === 'wearable') {
+                                        $b1 = 'Wearables';
+                                } elseif ($b1 === 'm2m') {
+                                        $b1 = 'Machine-to-Machine';
+                                } elseif ($b1 === 'diy') {
+                                        $b1 = 'Do-It-Yourself';
+                                } elseif ($b1 === 'healthcare') {
+                                        $b1 = 'Healthcare';
+                                } elseif ($b1 === 'wellness') {
+                                        $b1 = 'Wellness';
+                                } elseif ($b1 === 'digital marketing') {
+                                        $b1 = 'Digital Marketing';
+                                } elseif ($b1 === 'business intelligence') {
+                                        $b1 = 'Business Intelligence';
+                                } elseif ($b1 === 'sso') {
+                                        $b1 = 'Single Sign-On';
+                                } elseif ($b1 === 'big data') {
+                                        $b1 = 'Big Data';
+                                } elseif ($b1 === 'data processing') {
+                                        $b1 = 'Data Processing';
+                                } elseif ($b1 === 'analytics') {
+                                        $b1 = 'Analytics';
+                                } elseif ($b1 === 'crm') {
+                                        $b1 = 'Customer Relationship Management';
+                                } elseif ($b1 === 'cloud') {
+                                        $b1 = 'Cloud';
+                                } elseif ($b1 === 'privacy') {
+                                        $b1 = 'Privacy';
+                                } elseif ($b1 === 'erp') {
+                                        $b1 = 'Enterprise Resource Planning';
+                                } elseif ($b1 === 'social') {
+                                        $b1 = 'Social';
+                                } elseif ($b1 === 'security') {
+                                        $b1 = 'Security';
+                                } elseif ($b1 === 'protection') {
+                                        $b1 = 'Protection';
+                                } elseif ($b1 === NULL) {
+                                        $b1 = 'N/A';
+                                }
+                                
+                                $b2 = $results['Business Type2'];
+                                if ($b2 === 'iot') {
+                                        $b2 = 'Internet of Things';
+                                } elseif ($b2 === 'wearable') {
+                                        $b2 = 'Wearables';
+                                } elseif ($b2 === 'm2m') {
+                                        $b2 = 'Machine-to-Machine';
+                                } elseif ($b2 === 'diy') {
+                                        $b2 = 'Do-It-Yourself';
+                                } elseif ($b2 === 'healthcare') {
+                                        $b2 = 'Healthcare';
+                                } elseif ($b2 === 'wellness') {
+                                        $b2 = 'Wellness';
+                                } elseif ($b2 === 'digital marketing') {
+                                        $b2 = 'Digital Marketing';
+                                } elseif ($b2 === 'business intelligence') {
+                                        $b2 = 'Business Intelligence';
+                                } elseif ($b2 === 'sso') {
+                                        $b2 = 'Single Sign-On';
+                                } elseif ($b2 === 'big data') {
+                                        $b2 = 'Big Data';
+                                } elseif ($b2 === 'data processing') {
+                                        $b2 = 'Data Processing';
+                                } elseif ($b2 === 'analytics') {
+                                        $b2 = 'Analytics';
+                                } elseif ($b2 === 'crm') {
+                                        $b2 = 'Customer Relationship Management';
+                                } elseif ($b2 === 'cloud') {
+                                        $b2 = 'Cloud';
+                                } elseif ($b2 === 'privacy') {
+                                        $b2 = 'Privacy';
+                                } elseif ($b2 === 'erp') {
+                                        $b2 = 'Enterprise Resource Planning';
+                                } elseif ($b2 === 'social') {
+                                        $b2 = 'Social';
+                                } elseif ($b2 === 'security') {
+                                        $b2 = 'Security';
+                                } elseif ($b2 === 'protection') {
+                                        $b2 = 'Protection';
+                                } elseif ($b2 === NULL) {
+                                        $b2 = 'N/A';
+                                }
+                                
+                                $b3 = $results['Business Type3'];
+                                if ($b3 === 'iot') {
+                                        $b3 = 'Internet of Things';
+                                } elseif ($b3 === 'wearable') {
+                                        $b3 = 'Wearables';
+                                } elseif ($b3 === 'm2m') {
+                                        $b3 = 'Machine-to-Machine';
+                                } elseif ($b3 === 'diy') {
+                                        $b3 = 'Do-It-Yourself';
+                                } elseif ($b3 === 'healthcare') {
+                                        $b3 = 'Healthcare';
+                                } elseif ($b3 === 'wellness') {
+                                        $b3 = 'Wellness';
+                                } elseif ($b3 === 'digital marketing') {
+                                        $b3 = 'Digital Marketing';
+                                } elseif ($b3 === 'business intelligence') {
+                                        $b3 = 'Business Intelligence';
+                                } elseif ($b3 === 'sso') {
+                                        $b3 = 'Single Sign-On';
+                                } elseif ($b3 === 'big data') {
+                                        $b3 = 'Big Data';
+                                } elseif ($b3 === 'data processing') {
+                                        $b3 = 'Data Processing';
+                                } elseif ($b3 === 'analytics') {
+                                        $b3 = 'Analytics';
+                                } elseif ($b3 === 'crm') {
+                                        $b3 = 'Customer Relationship Management';
+                                } elseif ($b3 === 'cloud') {
+                                        $b3 = 'Cloud';
+                                } elseif ($b3 === 'privacy') {
+                                        $b3 = 'Privacy';
+                                } elseif ($b3 === 'erp') {
+                                        $b3 = 'Enterprise Resource Planning';
+                                } elseif ($b3 === 'social') {
+                                        $b3 = 'Social';
+                                } elseif ($b3 === 'security') {
+                                        $b3 = 'Security';
+                                } elseif ($b3 === 'protection') {
+                                        $b3 = 'Protection';
+                                } elseif ($b3 === NULL) {
+                                        $b3 = 'N/A';
+                                }
+                                
+                                $b4 = $results['Business Type4'];
+                                if ($b4 === 'iot') {
+                                        $b4 = 'Internet of Things';
+                                } elseif ($b4 === 'wearable') {
+                                        $b4 = 'Wearables';
+                                } elseif ($b4 === 'm2m') {
+                                        $b4 = 'Machine-to-Machine';
+                                } elseif ($b4 === 'diy') {
+                                        $b4 = 'Do-It-Yourself';
+                                } elseif ($b4 === 'healthcare') {
+                                        $b4 = 'Healthcare';
+                                } elseif ($b4 === 'wellness') {
+                                        $b4 = 'Wellness';
+                                } elseif ($b4 === 'digital marketing') {
+                                        $b4 = 'Digital Marketing';
+                                } elseif ($b4 === 'business intelligence') {
+                                        $b4 = 'Business Intelligence';
+                                } elseif ($b4 === 'sso') {
+                                        $b4 = 'Single Sign-On';
+                                } elseif ($b4 === 'big data') {
+                                        $b4 = 'Big Data';
+                                } elseif ($b4 === 'data processing') {
+                                        $b4 = 'Data Processing';
+                                } elseif ($b4 === 'analytics') {
+                                        $b4 = 'Analytics';
+                                } elseif ($b4 === 'crm') {
+                                        $b4 = 'Customer Relationship Management';
+                                } elseif ($b4 === 'cloud') {
+                                        $b4 = 'Cloud';
+                                } elseif ($b4 === 'privacy') {
+                                        $b4 = 'Privacy';
+                                } elseif ($b4 === 'erp') {
+                                        $b4 = 'Enterprise Resource Planning';
+                                } elseif ($b4 === 'social') {
+                                        $b4 = 'Social';
+                                } elseif ($b4 === 'security') {
+                                        $b4 = 'Security';
+                                } elseif ($b4 === 'protection') {
+                                        $b4 = 'Protection';
+                                } elseif ($b4 === NULL) {
+                                        $b4 = 'N/A';
+                                }
+                                
+                                $b5 = $results['Business Type5'];
+                                if ($b5 === 'iot') {
+                                        $b5 = 'Internet of Things';
+                                } elseif ($b5 === 'wearable') {
+                                        $b5 = 'Wearables';
+                                } elseif ($b5 === 'm2m') {
+                                        $b5 = 'Machine-to-Machine';
+                                } elseif ($b5 === 'diy') {
+                                        $b5 = 'Do-It-Yourself';
+                                } elseif ($b5 === 'healthcare') {
+                                        $b5 = 'Healthcare';
+                                } elseif ($b5 === 'wellness') {
+                                        $b5 = 'Wellness';
+                                } elseif ($b5 === 'digital marketing') {
+                                        $b5 = 'Digital Marketing';
+                                } elseif ($b5 === 'business intelligence') {
+                                        $b5 = 'Business Intelligence';
+                                } elseif ($b5 === 'sso') {
+                                        $b5 = 'Single Sign-On';
+                                } elseif ($b5 === 'big data') {
+                                        $b5 = 'Big Data';
+                                } elseif ($b5 === 'data processing') {
+                                        $b5 = 'Data Processing';
+                                } elseif ($b5 === 'analytics') {
+                                        $b5 = 'Analytics';
+                                } elseif ($b5 === 'crm') {
+                                        $b5 = 'Customer Relationship Management';
+                                } elseif ($b5 === 'cloud') {
+                                        $b5 = 'Cloud';
+                                } elseif ($b5 === 'privacy') {
+                                        $b5 = 'Privacy';
+                                } elseif ($b5 === 'erp') {
+                                        $b5 = 'Enterprise Resource Planning';
+                                } elseif ($b5 === 'social') {
+                                        $b5 = 'Social';
+                                } elseif ($b5 === 'security') {
+                                        $b5 = 'Security';
+                                } elseif ($b5 === 'protection') {
+                                        $b5 = 'Protection';
+                                } elseif ($b5 === NULL) {
+                                        $b5 = 'N/A';
+                                }
+                                
+                                $b6 = $results['Business Type6'];
+                                if ($b6 === 'iot') {
+                                        $b6 = 'Internet of Things';
+                                } elseif ($b6 === 'wearable') {
+                                        $b6 = 'Wearables';
+                                } elseif ($b6 === 'm2m') {
+                                        $b6 = 'Machine-to-Machine';
+                                } elseif ($b6 === 'diy') {
+                                        $b6 = 'Do-It-Yourself';
+                                } elseif ($b6 === 'healthcare') {
+                                        $b6 = 'Healthcare';
+                                } elseif ($b6 === 'wellness') {
+                                        $b6 = 'Wellness';
+                                } elseif ($b6 === 'digital marketing') {
+                                        $b6 = 'Digital Marketing';
+                                } elseif ($b6 === 'business intelligence') {
+                                        $b6 = 'Business Intelligence';
+                                } elseif ($b6 === 'sso') {
+                                        $b6 = 'Single Sign-On';
+                                } elseif ($b6 === 'big data') {
+                                        $b6 = 'Big Data';
+                                } elseif ($b6 === 'data processing') {
+                                        $b6 = 'Data Processing';
+                                } elseif ($b6 === 'analytics') {
+                                        $b6 = 'Analytics';
+                                } elseif ($b6 === 'crm') {
+                                        $b6 = 'Customer Relationship Management';
+                                } elseif ($b6 === 'cloud') {
+                                        $b6 = 'Cloud';
+                                } elseif ($b6 === 'privacy') {
+                                        $b6 = 'Privacy';
+                                } elseif ($b6 === 'erp') {
+                                        $b6 = 'Enterprise Resource Planning';
+                                } elseif ($b6 === 'social') {
+                                        $b6 = 'Social';
+                                } elseif ($b6 === 'security') {
+                                        $b6 = 'Security';
+                                } elseif ($b6 === 'protection') {
+                                        $b6 = 'Protection';
+                                } elseif ($b6 === NULL) {
+                                        $b6 = 'N/A';
+                                }
+                                
+                                $b7 = $results['Business Type7'];
+                                if ($b7 === 'iot') {
+                                        $b7 = 'Internet of Things';
+                                } elseif ($b7 === 'wearable') {
+                                        $b7 = 'Wearables';
+                                } elseif ($b7 === 'm2m') {
+                                        $b7 = 'Machine-to-Machine';
+                                } elseif ($b7 === 'diy') {
+                                        $b7 = 'Do-It-Yourself';
+                                } elseif ($b7 === 'healthcare') {
+                                        $b7 = 'Healthcare';
+                                } elseif ($b7 === 'wellness') {
+                                        $b7 = 'Wellness';
+                                } elseif ($b7 === 'digital marketing') {
+                                        $b7 = 'Digital Marketing';
+                                } elseif ($b7 === 'business intelligence') {
+                                        $b7 = 'Business Intelligence';
+                                } elseif ($b7 === 'sso') {
+                                        $b7 = 'Single Sign-On';
+                                } elseif ($b7 === 'big data') {
+                                        $b7 = 'Big Data';
+                                } elseif ($b7 === 'data processing') {
+                                        $b7 = 'Data Processing';
+                                } elseif ($b7 === 'analytics') {
+                                        $b7 = 'Analytics';
+                                } elseif ($b7 === 'crm') {
+                                        $b7 = 'Customer Relationship Management';
+                                } elseif ($b7 === 'cloud') {
+                                        $b7 = 'Cloud';
+                                } elseif ($b7 === 'privacy') {
+                                        $b7 = 'Privacy';
+                                } elseif ($b7 === 'erp') {
+                                        $b7 = 'Enterprise Resource Planning';
+                                } elseif ($b7 === 'social') {
+                                        $b7 = 'Social';
+                                } elseif ($b7 === 'security') {
+                                        $b7 = 'Security';
+                                } elseif ($b7 === 'protection') {
+                                        $b7 = 'Protection';
+                                } elseif ($b7 === NULL) {
+                                        $b7 = 'N/A';
+                                }
+                                
+                                $b8 = $results['Business Type8'];
+                                if ($b8 === 'iot') {
+                                        $b8 = 'Internet of Things';
+                                } elseif ($b8 === 'wearable') {
+                                        $b8 = 'Wearables';
+                                } elseif ($b8 === 'm2m') {
+                                        $b8 = 'Machine-to-Machine';
+                                } elseif ($b8 === 'diy') {
+                                        $b8 = 'Do-It-Yourself';
+                                } elseif ($b8 === 'healthcare') {
+                                        $b8 = 'Healthcare';
+                                } elseif ($b8 === 'wellness') {
+                                        $b8 = 'Wellness';
+                                } elseif ($b8 === 'digital marketing') {
+                                        $b8 = 'Digital Marketing';
+                                } elseif ($b8 === 'business intelligence') {
+                                        $b8 = 'Business Intelligence';
+                                } elseif ($b8 === 'sso') {
+                                        $b8 = 'Single Sign-On';
+                                } elseif ($b8 === 'big data') {
+                                        $b8 = 'Big Data';
+                                } elseif ($b8 === 'data processing') {
+                                        $b8 = 'Data Processing';
+                                } elseif ($b8 === 'analytics') {
+                                        $b8 = 'Analytics';
+                                } elseif ($b8 === 'crm') {
+                                        $b8 = 'Customer Relationship Management';
+                                } elseif ($b8 === 'cloud') {
+                                        $b8 = 'Cloud';
+                                } elseif ($b8 === 'privacy') {
+                                        $b8 = 'Privacy';
+                                } elseif ($b8 === 'erp') {
+                                        $b8 = 'Enterprise Resource Planning';
+                                } elseif ($b8 === 'social') {
+                                        $b8 = 'Social';
+                                } elseif ($b8 === 'security') {
+                                        $b8 = 'Security';
+                                } elseif ($b8 === 'protection') {
+                                        $b8 = 'Protection';
+                                } elseif ($b8 === NULL) {
+                                        $b8 = 'N/A';
+                                }
+                                
+                                $b9 = $results['Business Type9'];
+                                if ($b9 === 'iot') {
+                                        $b9 = 'Internet of Things';
+                                } elseif ($b9 === 'wearable') {
+                                        $b9 = 'Wearables';
+                                } elseif ($b9 === 'm2m') {
+                                        $b9 = 'Machine-to-Machine';
+                                } elseif ($b9 === 'diy') {
+                                        $b9 = 'Do-It-Yourself';
+                                } elseif ($b9 === 'healthcare') {
+                                        $b9 = 'Healthcare';
+                                } elseif ($b9 === 'wellness') {
+                                        $b9 = 'Wellness';
+                                } elseif ($b9 === 'digital marketing') {
+                                        $b9 = 'Digital Marketing';
+                                } elseif ($b9 === 'business intelligence') {
+                                        $b9 = 'Business Intelligence';
+                                } elseif ($b9 === 'sso') {
+                                        $b9 = 'Single Sign-On';
+                                } elseif ($b9 === 'big data') {
+                                        $b9 = 'Big Data';
+                                } elseif ($b9 === 'data processing') {
+                                        $b9 = 'Data Processing';
+                                } elseif ($b9 === 'analytics') {
+                                        $b9 = 'Analytics';
+                                } elseif ($b9 === 'crm') {
+                                        $b9 = 'Customer Relationship Management';
+                                } elseif ($b9 === 'cloud') {
+                                        $b9 = 'Cloud';
+                                } elseif ($b9 === 'privacy') {
+                                        $b9 = 'Privacy';
+                                } elseif ($b9 === 'erp') {
+                                        $b9 = 'Enterprise Resource Planning';
+                                } elseif ($b9 === 'social') {
+                                        $b9 = 'Social';
+                                } elseif ($b9 === 'security') {
+                                        $b9 = 'Security';
+                                } elseif ($b9 === 'protection') {
+                                        $b9 = 'Protection';
+                                } elseif ($b9 === NULL) {
+                                        $b9 = 'N/A';
+                                }
+                                
+                                $b10 = $results['Business Type10'];
+                                if ($b10 === 'iot') {
+                                        $b10 = 'Internet of Things';
+                                } elseif ($b10 === 'wearable') {
+                                        $b10 = 'Wearables';
+                                } elseif ($b10 === 'm2m') {
+                                        $b10 = 'Machine-to-Machine';
+                                } elseif ($b10 === 'diy') {
+                                        $b10 = 'Do-It-Yourself';
+                                } elseif ($b10 === 'healthcare') {
+                                        $b10 = 'Healthcare';
+                                } elseif ($b10 === 'wellness') {
+                                        $b10 = 'Wellness';
+                                } elseif ($b10 === 'digital marketing') {
+                                        $b10 = 'Digital Marketing';
+                                } elseif ($b10 === 'business intelligence') {
+                                        $b10 = 'Business Intelligence';
+                                } elseif ($b10 === 'sso') {
+                                        $b10 = 'Single Sign-On';
+                                } elseif ($b10 === 'big data') {
+                                        $b10 = 'Big Data';
+                                } elseif ($b10 === 'data processing') {
+                                        $b10 = 'Data Processing';
+                                } elseif ($b10 === 'analytics') {
+                                        $b10 = 'Analytics';
+                                } elseif ($b10 === 'crm') {
+                                        $b10 = 'Customer Relationship Management';
+                                } elseif ($b10 === 'cloud') {
+                                        $b10 = 'Cloud';
+                                } elseif ($b10 === 'privacy') {
+                                        $b10 = 'Privacy';
+                                } elseif ($b10 === 'erp') {
+                                        $b10 = 'Enterprise Resource Planning';
+                                } elseif ($b10 === 'social') {
+                                        $b10 = 'Social';
+                                } elseif ($b10 === 'security') {
+                                        $b10 = 'Security';
+                                } elseif ($b10 === 'protection') {
+                                        $b10 = 'Protection';
+                                } elseif ($b10 === NULL) {
+                                        $b10 = 'N/A';
+                                }
+        
+                                array_push($company2, $company1);
+                                array_push($number2, $number1);
+                                array_push($city2, $city1);
+                                array_push($postcode2, $postcode1);
+                                array_push($status2, $status1);
+                                array_push($address12, $address11);
+                                array_push($address22, $address21);
+                                array_push($address32, $address31);
+                                array_push($address42, $address41);
+                                array_push($latitude1, $latitude);
+                                array_push($longitude1, $longitude);
+                                array_push($web1, $web);
+                                array_push($b0a, $b0);
+                                array_push($b1a, $b1);
+                                array_push($b2a, $b2);
+                                array_push($b3a, $b3);
+                                array_push($b4a, $b4);
+                                array_push($b5a, $b5);
+                                array_push($b6a, $b6);
+                                array_push($b7a, $b7);
+                                array_push($b8a, $b8);
+                                array_push($b9a, $b9);
+                                array_push($b10a, $b10);
+                        }
+                                     
+                }          
+                
+                if($latitude == 0 && $longitude == 0){
+                        echo "Invalid Postcode";
+                }
+                
+                $limits = sizeof($latitude1);
+                echo "Total entry: ".$limits."<br>";
+                echo "Type of Business: ".$q7."<br>";
+                echo "City: ".$query2."<br>";
+                
+                echo "<br>";
+                
+                ?>
+                
+                <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=visualization"></script>
+                <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+                <script> 
+ 
+                // Adding Data Points
+                var map, pointarray, heatmap;
+                var latitude2 = <?php echo json_encode($latitude1); ?>;
+                var longitude2 = <?php echo json_encode($longitude1); ?>;
+                var address1 = <?php echo json_encode($address12); ?>;
+                var address2 = <?php echo json_encode($address22); ?>;
+                var address3 = <?php echo json_encode($address32); ?>;
+                var address4 = <?php echo json_encode($address42); ?>;
+                var limits = <?php echo json_encode($limits); ?>;
+                var postcode = <?php echo json_encode($postcode2); ?>;
+                var city = <?php echo json_encode($query2); ?>;
+                var city2 = <?php echo json_encode($city2); ?>;
+                var taxiData = [];
+                var taxiData3 = [];
+                var markers = [];
+                var marker2 = [];
+                var xt = 0;
+                var yt = 0;
+                var zt = 0;
+                var wt = 0;
+                var counter = 0;
+                var z = 0;
+                var geocoder = new google.maps.Geocoder();
+                var infowindow = new google.maps.InfoWindow();
+                //var cityBristol = new google.maps.LatLng(51.454513, -2.58791);
+                //var cityGuildford = new google.maps.LatLng(51.23622, -0.570409);
+                //var myLatlng = new google.maps.LatLng(51.454513, -2.58791);
+                
+                for (i = 0; i < latitude2.length; i++) { 
+                        var taxiData1 = new google.maps.LatLng(latitude2[i], longitude2[i]);
+                        taxiData.push(taxiData1);
+                }
+                
+                function initialize() {
+                        
+                        var mapOptions = {
+                                        //zoom: 12,      
+                                        //center: myLatlng, 
+                                        panControl:true,
+                                        zoomControl:true,
+                                        mapTypeControl:true,
+                                        scaleControl:true,
+                                        streetViewControl:true,
+                                        overviewMapControl:true,
+                                        rotateControl:true,   
+                                        mapTypeId: google.maps.MapTypeId.TERRAIN
+                                }; 
+                             
+                        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+  
+                        for (k = 0; k < taxiData.length; k++) {
+
+                                var marker = new google.maps.Marker({
+                                        position: taxiData[k],
+                                        map: map,
+                                        title: address1[k] + ', ' + address2[k] + ', ' + postcode[k]
+                                        
+                                });
+                                markers.push(marker);
+                                 
+                                google.maps.event.addListener(marker, 'click', function() {
+                                        map.setZoom(12);
+                                        //center: marker;
+                                        infowindow.open(map,marker);
+                                }); 
+                                 
+                                google.maps.event.addListener(marker, 'click', function() {
+                                        infowindow.setContent(this.title);
+                                        infowindow.open(map, this);
+                                });
+                        }  
+                        
+                        var bounds = new google.maps.LatLngBounds();
+                        for (var i = 0, LtLgLen = taxiData.length; i < LtLgLen; i++) {
+                                bounds.extend(taxiData[i]);
+                        }
+                        map.fitBounds(bounds);
+                          
+                        var pointArray = new google.maps.MVCArray(taxiData);
+                        heatmap = new google.maps.visualization.HeatmapLayer({
+                                data: pointArray,
+                                maxIntensity: 3,
+                        });
+                        heatmap.setMap(map);
+             
+                }
+                
+                function toggleHeatmap() {
+                        heatmap.setMap(heatmap.getMap() ? null : map);
+                }
+
+                function changeGradient() {
+                        var gradient = [
+                            'rgba(0, 255, 255, 0)',
+                            'rgba(0, 255, 255, 1)',
+                            'rgba(0, 191, 255, 1)',
+                            'rgba(0, 127, 255, 1)',
+                            'rgba(0, 63, 255, 1)',
+                            'rgba(0, 0, 255, 1)',
+                            'rgba(0, 0, 223, 1)',
+                            'rgba(0, 0, 191, 1)',
+                            'rgba(0, 0, 159, 1)',
+                            'rgba(0, 0, 127, 1)',
+                            'rgba(63, 0, 91, 1)',
+                            'rgba(127, 0, 63, 1)',
+                            'rgba(191, 0, 31, 1)',
+                            'rgba(255, 0, 0, 1)'
+                            ]
+                        heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+                }
+
+                function changeRadius() {
+                        heatmap.set('radius', heatmap.get('radius') ? null : 20);
+                }
+
+                function changeOpacity() {
+                        heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
+                }
+                  
+                // Add a marker to the map and push to the array.
+                function addMarker(location) {
+                        var marker = new google.maps.Marker({
+                                position: location,
+                                map: map
+                        });
+                        markers.push(marker);
+                }
+                
+                // Sets the map on all markers in the array.
+                function setAllMap(map) {
+                        for (var i = 0; i < markers.length; i++) {
+                                markers[i].setMap(map);
+                        }
+                }
+
+                // Removes the markers from the map, but keeps them in the array.
+                function clearMarkers() {
+                        setAllMap(null);
+                }
+                
+                // Shows any markers currently in the array.
+                function showMarkers() {
+                        setAllMap(map);
+                }
+
+                google.maps.event.addDomListener(window, 'load', initialize);
+                </script>
+        
+                <div style="width:675px;height:545px;border:1.5px solid #000;">
+                <div id="panel">
+                        <button onclick="toggleHeatmap()">Toggle heat map</button>
+                        <button onclick="changeGradient()">Change gradient</button>
+                        <button onclick="changeRadius()">Change radius</button>
+                        <button onclick="changeOpacity()">Change opacity</button>
+                        <input onclick="clearMarkers();" type=button value="Hide Markers">
+                        <input onclick="showMarkers();" type=button value="Show All Markers">
+                </div>
+                <div id="map-canvas">
+                </div>
+                </div>
+                
+                <button onclick="scrollWin()" id="fixedbutton2">Back to top</button><br><br>
+        
+                <script>
+                function scrollWin() {
+                        window.scrollTo(0, 0);
+                }
+                </script>
+<?php
+                for($z = 0; $z < $limits; $z++) {
+?>
+        
+                        <tr><td align="center"><font size="2"><?php echo $company2[$z];?></font></td>
+                        <td align="center"><font size="2"><?php echo $city2[$z];?></font></td>
+                        <td align="center"><font size="2"><?php echo $postcode2[$z];?></font></td>
+                        <td align="center"><font size="2"><?php echo $status2[$z];?></font></td>
+                        <td align="center"><font size="2"><?php echo $address12[$z];?></font></td>
+                        <td align="center"><font size="2"><?php echo $address22[$z];?></font></td>
+                        <td align="center"><font size="2"><?php echo $address32[$z];?></font></td>
+                        <td align="center"><font size="2"><?php echo $address42[$z];?></font></td>
+                        <td align="center"><font size="2"><?php echo '<a href="'.$web1[$z].'" target="_blank">'.$web1[$z].'</a>';?></font></td>
+                        <td align="center"><font size="2"><?php echo $b1a[$z],", ",$b2a[$z],", ",$b3a[$z],", ",$b4a[$z],", ",$b5a[$z],", ",$b6a[$z],", ",$b7a[$z],", ",$b8a[$z],", ",$b9a[$z],", ",$b10a[$z];?></font></td>
+                        </tr>
+        
+<?php        
+                }
+        }
+        else{ // if there is no matching rows do following
+                echo "No results";
+        }
+}
+mysql_close($conn);
+?>
+
+<form action="http://projectalam.atwebpages.com">
+<input type="submit" value="Home" id="fixedbutton">
+</form>
+
+</table>
+<p></p><br><br>
+<p></p>
+</body>
+</html>
+     
